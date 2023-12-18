@@ -184,6 +184,49 @@ ice_group = pygame.sprite.Group()
 bullets = []
 ices = []
 
+# Font setup
+font = pygame.font.Font(None, 36)
+
+# Function to display text on the screen
+def draw_text(text, font, color, surface, x, y):
+    text_obj = font.render(text, True, color)
+    text_rect = text_obj.get_rect()
+    text_rect.topleft = (x, y)
+    surface.blit(text_obj, text_rect)
+
+# Function to create a button
+def draw_button(surface, color, x, y, width, height, text, text_color):
+    pygame.draw.rect(surface, color, (x, y, width, height))
+    draw_text(text, font, text_color, surface, x + BUTTON_PADDING, y + BUTTON_PADDING)
+
+# Title screen function
+def title_screen():
+    running = True
+    while running:
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if play_button_rect.collidepoint(mouse_pos):
+                    return "play"
+
+        # Draw the title and play button
+        screen.fill(BACKGROUND_COLOR)
+        draw_text("Your Game Title", font, (255, 255, 255), screen, 250, 100)
+        play_button_rect = pygame.Rect(300, 300, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT)
+        draw_button(screen, BUTTON_COLOR, 300, 300, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT, "Play", BUTTON_TEXT_COLOR)
+
+        pygame.display.flip()
+        clock.tick(60)
+
+# Play screen function
+def play_screen():
+    # Your game code goes here
+    print("Starting game...")
+
 # MAIN GAME LOOP
 while True:
     for event in pygame.event.get():
