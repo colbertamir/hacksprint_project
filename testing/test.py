@@ -16,6 +16,18 @@ WIZARD_X = 400
 WIZARD_Y = 200
 WIZARD_IMAGE = "ice_king.png"
 
+# ICE INFO
+FIRE_EVENT = pygame.USEREVENT + 1
+
+# SCORE
+score_value = 0
+pygame.font.init()
+font = pygame.font.SysFont(None, 32)
+
+def show_score(x, y):
+    score = font.render(str(score_value), True, (255, 0, 0))
+    screen.blit(score, (x, y))
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, picture_path):
         super().__init__()
@@ -24,6 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = [pos_x, pos_y]
         self.gunshot = pygame.mixer.Sound("shoot.wav")
         self.hitbox = pygame.Rect(pos_x + 15, pos_y + 45, 50, 50)
+        self.health = 10
 
     def draw(self, win):
         pygame.draw.rect(win, (255, 0, 0), self.hitbox, 2)
@@ -35,7 +48,7 @@ class Player(pygame.sprite.Sprite):
            self.rect.x -= 5 # move left
         if keys[pygame.K_RIGHT]:
            self.rect.x += 5 # move right
-        self.hitbox.x = self.rect.x + 15
+        self.hitbox.x = self.rect.x + 48
         self.hitbox.y = self.rect.y + 45
 
         # KEEP PLAYER ON SCREEN
@@ -117,8 +130,34 @@ class Wizard(pygame.sprite.Sprite):
         self.pos_y += self.dy
         self.rect.center = (self.pos_x, self.pos_y)
         self.hitbox.center = (self.pos_x + 15, self.pos_y + 45)
-    
 
+    def create_ice(self):
+        return Ice(self.rect.centerx, self.rect.centery, "ice.png")
+    
+class Ice(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y, picture_path):
+        super().__init__()
+        self.pos_x = pos_x
+        self.pos_y = pos_y 
+        self.image = pygame.image.load(picture_path) # load the sprite image
+        self.jingle = pygame.mixer.Sound("bells.mp3")
+        self.width = self.image.get_width()
+        self.height = self.image.get_height()
+        self.rect = self.image.get_rect(center = (self.pos_x, self.pos_y))
+        self.hitbox = pygame.Rect(pos_x + 15, pos_y + 30, 25, 45)
+    
+    def jangle(self):
+        self.jingle.play()
+    
+    def draw(self, win):
+        pygame.draw.rect(win, (255, 0, 0), self.hitbox, 2)
+    
+    def update(self):
+        self.rect.y += 5
+        if self.rect.y >= screen_height + 200:
+            self.kill()
+        self.hitbox.x = self.rect.x + 15
+        self.hitbox.y = self.rect.y + 30
 
 # GENERAL SETUP
 pygame.init()
@@ -128,7 +167,7 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 background = pygame.image.load(BACKGROUND) # load background image
 pygame.mouse.set_visible(False) # make mouse invisible
-
+pygame.time.set_timer(FIRE_EVENT, 1000)
 
 player = Player(PLAYER_X, PLAYER_Y, PLAYER_IMAGE) # create instance of the sprite
 player_group = pygame.sprite.Group() # create group to add sprites to
@@ -140,7 +179,10 @@ wizard = Wizard(WIZARD_X, WIZARD_Y, WIZARD_IMAGE)
 wizard_group = pygame.sprite.Group()
 wizard_group.add(wizard)
 
+ice_group = pygame.sprite.Group()
+
 bullets = []
+ices = []
 
 # Font setup
 font = pygame.font.Font(None, 36)
@@ -193,19 +235,32 @@ while True:
             sys.exit()
         
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE: # play sound when mouse is clicked
+            if event.key == pygame.K_SPACE and player.health > 0: # play sound when mouse is clicked
                 bullets.append(player.create_bullet())
                 for bullet in bullets:
                     bullet_group.add(bullet)
                 player.shoot()
-        for bullet in bullets:
-            if bullet.hitbox.colliderect(wizard.hitbox):
-                if wizard.health <= 0:
-                    wizard.kill()
-                print(wizard.health)
-                wizard.health -= 1
-                bullet.jangle()
-                print("hit")
+            
+        if event.type == FIRE_EVENT and wizard.health > 0 and player.health > 0:
+            ices.append(wizard.create_ice())
+            for ice in ices:
+                ice_group.add(ice)
+    
+        if wizard.health >= 0:
+            for bullet in bullets:
+                if bullet.hitbox.colliderect(wizard.hitbox):
+                    print(wizard.health)
+                    wizard.health -= 1
+                    bullet.jangle()
+                    print("WIZARD was hit")
+        if player.health >= 0:
+            for ice in ices:
+                if ice.hitbox.colliderect(player.hitbox):
+                    print(f'PLAYER HP: {player.health}')
+                    player.health -= 1
+                    ice.jangle()
+                    print("PLAYER was hit")
+
 
         current_time = pygame.time.get_ticks()
 
@@ -215,18 +270,28 @@ while True:
     screen.blit(background, (0, 0)) # add background to screen
 
     # RENDER IMAGES
-    player_group.draw(screen) # create all sprites from specific group
-    wizard_group.draw(screen)
+    if player.health > 0:
+        player_group.draw(screen) # create all sprites from specific group
+    ice_group.draw(screen)
+    if wizard.health > 0:
+        wizard_group.draw(screen)
     bullet_group.draw(screen)
 
     # UPDATE SPRITES
     player_group.update(PLAYER_X, PLAYER_Y) # update the position of the all sprites in specific group
     bullet_group.update()
     wizard_group.update(current_time)
+    ice_group.update()
+
+    show_score(0, 0)
 
     # HIT BOXES
-    player.draw(screen)
-    wizard.draw(screen)
-    for bullet in bullets:
-        bullet.draw(screen)
+    #if player.health > 0:
+        #player.draw(screen)
+    #if wizard.health > 0:
+        #wizard.draw(screen)
+    #for bullet in bullets:
+        #bullet.draw(screen)
+    #for ice in ices:
+        #ice.draw(screen)
     clock.tick(120)
