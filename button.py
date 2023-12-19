@@ -9,9 +9,9 @@ class Button(pygame.sprite.Sprite):
 
         self.action = action
 
-        default_image = make_surface(text_content, font_size, text_color, bg_color)
+        default_image = make_surface(text_content, font_size, (29, 57, 19), bg_color)
 
-        highlighted_image = make_surface(text_content, font_size * 1.2, text_color, bg_color)
+        highlighted_image = make_surface(text_content, font_size * 1.2, (149, 23, 23), bg_color)
 
         self.images = [default_image, highlighted_image]
         self.rects = [default_image.get_rect(center = center_pos), highlighted_image.get_rect(center = center_pos)]

@@ -42,6 +42,6 @@ bosshealthbar_group.add(boss_healthbar)
 
 # FUNCTION TO MAKE A SURFACE
 def make_surface(text, font_size, text_rgb, bg_rgb):
-    font = pygame.freetype.SysFont("Courier", font_size, bold=True)
+    font = pygame.freetype.Font("assets/8bit.ttf", font_size)
     surface, _ = font.render(text=text, fgcolor=text_rgb, bgcolor=bg_rgb)
     return surface.convert_alpha()
