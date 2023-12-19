@@ -1,27 +1,69 @@
 import pygame, sys
 from player_projectile import Bullet
+from constants import *
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, picture_path):
+    def __init__(self, pos_x, pos_y):
         super().__init__()
-        self.image = pygame.image.load(picture_path) # load the sprite image
+        self.treeanimation = False
+
+        # LOAD IMAGES FOR ANIMATIOM
+        self.sprites = []
+        self.sprites.append(pygame.image.load(PLAYER_IMGS[0]))
+        self.sprites.append(pygame.image.load(PLAYER_IMGS[1]))
+        self.sprites.append(pygame.image.load(PLAYER_IMGS[2]))
+        self.sprites.append(pygame.image.load(PLAYER_IMGS[3]))
+        self.sprites.append(pygame.image.load(PLAYER_IMGS[4]))
+        self.sprites.append(pygame.image.load(PLAYER_IMGS[5]))
+        
+        # START ON FIRST IMAGE
+        self.current_sprite = 0
+        self.image = self.sprites[self.current_sprite]
+
+        # GET RECTANGLE AND SET POSITION
         self.rect = self.image.get_rect()
         self.rect.center = [pos_x, pos_y]
-        self.gunshot = pygame.mixer.Sound("shoot.wav")
-        self.hitbox = pygame.Rect(pos_x + 15, pos_y + 45, 50, 50)
 
+        # LOAD SHOOT SOUND
+        self.gunshot = pygame.mixer.Sound(PLAYER_SHOOT)
+
+        # CREATE HITBOX
+        self.hitbox = pygame.Rect(pos_x + 15, pos_y + 45, 75, 90)
+
+        # SET HEALTH AND LIVES
+        self.health = 12
+        self.lives = 2
+    
+    # START ANIMATION
+    def animate(self):
+        self.treeanimation = True
+
+    # DRAW HITBOX
     def draw(self, win):
         pygame.draw.rect(win, (255, 0, 0), self.hitbox, 2)
 
-    # method to update position of the sprite to the same as the mouse position
-    def update(self, new_x, pos_y):
+    # UPDATE IMAGE AND POSITION OF PLAYER
+    def update(self, new_x, pos_y, speed):
+        if self.treeanimation == True:
+            self.current_sprite += speed
+            if int(self.current_sprite) >= len(self.sprites):
+                self.current_sprite = 0
+                self.treeanimation = False
+                
+            self.image = self.sprites[int(self.current_sprite)]
+        
+        # RETREIVE PRESSED KEYS
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-           self.rect.x -= 5 # move left
-        if keys[pygame.K_RIGHT]:
-           self.rect.x += 5 # move right
-        self.hitbox.x = self.rect.x + 15
-        self.hitbox.y = self.rect.y + 45
+
+        # CHECK IF PLAYER NEEDS TO MOVE LEFT OR RIGHT
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+           self.rect.x -= 10 # move left
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+           self.rect.x += 10 # move right
+        
+        # SET POSITION OF HITBOX
+        self.hitbox.x = self.rect.x + 58
+        self.hitbox.y = self.rect.y + 55
 
         # KEEP PLAYER ON SCREEN
         if self.rect.left < 0:
@@ -29,9 +71,10 @@ class Player(pygame.sprite.Sprite):
         if self.rect.right > 800:
             self.rect.right = 800
     
-        # method for shots sound
+    # METHOD FOR SHOT SOUND
     def shoot(self):
         self.gunshot.play()
     
+    # CREATE BULLET
     def create_bullet(self):
-        return Bullet(self.rect.centerx, self.rect.top, "candycane3.png")
+        return Bullet(self.rect.centerx, self.rect.top, PLAYER_PROJECTILE)
