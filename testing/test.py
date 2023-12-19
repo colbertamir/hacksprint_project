@@ -101,7 +101,7 @@ class Wizard(pygame.sprite.Sprite):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.rect.center = [self.pos_x, self.pos_y]
-        self.hitbox = pygame.Rect(self.pos_x + 15, self.pos_y + 45, 65, 65)
+        self.hitbox = pygame.Rect(self.pos_x + 15, self.pos_y + 45, 90, 90)
         self.dx = 0.5
         self.dy = 0.75
         self.health = 10
@@ -286,12 +286,12 @@ while True:
     show_score(0, 0)
 
     # HIT BOXES
-    #if player.health > 0:
-        #player.draw(screen)
-    #if wizard.health > 0:
-        #wizard.draw(screen)
-    #for bullet in bullets:
-        #bullet.draw(screen)
-    #for ice in ices:
-        #ice.draw(screen)
+    if player.health > 0:
+        player.draw(screen)
+    if wizard.health > 0:
+        wizard.draw(screen)
+    for bullet in bullets:
+        bullet.draw(screen)
+    for ice in ices:
+        ice.draw(screen)
     clock.tick(120)

@@ -1,6 +1,7 @@
 import pygame
 from constants import *
 from button import Button
+from text import Text
 from pygame.sprite import RenderUpdates
 from config import *
 import random
@@ -8,31 +9,57 @@ import random
 
 def title_screen(screen):
 
+    title1 = Text(
+        center_pos = (210, 75),
+        font_size = 45,
+        bg_color = None,
+        text_color = (23, 37, 64),
+        text_content = 'ICEICLE'
+    )
+
+    title2 = Text(
+        center_pos = (210, 130),
+        font_size = 20,
+        bg_color = None,
+        text_color = (219, 243, 254),
+        text_content = 'a winter adventure'
+    )
+
+
     start_button = Button(
-        center_pos = (400, 400),
+        center_pos = (205, 230),
         font_size = 30,
-        bg_color = BLACK,
-        text_color = RED,
-        text_content = 'start',
+        bg_color = None,
+        text_color = (149, 23, 23),
+        text_content = 'START',
         action = GameEvent.STARTGAME,
     )
 
-    buttons = RenderUpdates(start_button)
+    buttons = RenderUpdates(title1, title2, start_button)
 
     running = True
     while running:
         mouse_up = False
         for event in pygame.event.get():
+
+                    # CHECK IF USER EXITED
+            if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
-        screen.fill(BLACK)
 
         for button in buttons:
             ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
             if ui_action is not None:
                 return ui_action
-            
+        
+        pygame.display.flip()
+        screen.blit(pygame.image.load("assets/pixelsnow.png"), (0, -200)) # add background to screen
         button.draw(screen)
+        title1.draw(screen)
+        title2.draw(screen)
         pygame.display.flip()
 
 
@@ -220,3 +247,4 @@ def game_over(screen):
             
             button.draw(screen)
         pygame.display.flip()
+        screen.blit("assets/frost.png", (0, 0)) # add background to screen
