@@ -29,7 +29,9 @@ python main.py
 
 - Use `SPACE` to shoot!
 
-![Gameplay Screenshot](gameplay_screenshot.png)
+![titlescreen](https://github.com/colbertamir/hacksprint_project/assets/125315163/f6761c36-4732-4938-9a2b-92c3df3b3962)
+
+![gameplay2](https://github.com/colbertamir/hacksprint_project/assets/125315163/f7a93674-3c71-4328-bd00-3b8f82065212)
 
 #### Contribution Guidelines
 1. Fork the repository.
