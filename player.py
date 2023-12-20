@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.gunshot = pygame.mixer.Sound(PLAYER_SHOOT)
 
         # CREATE HITBOX
-        self.hitbox = pygame.Rect(pos_x + 15, pos_y + 45, 75, 90)
+        self.hitbox = pygame.Rect(pos_x + 15, pos_y + 20, 75, 90)
 
         # SET HEALTH AND LIVES
         self.health = 12
@@ -62,8 +62,8 @@ class Player(pygame.sprite.Sprite):
            self.rect.x += 10 # move right
         
         # SET POSITION OF HITBOX
-        self.hitbox.x = self.rect.x + 58
-        self.hitbox.y = self.rect.y + 55
+        self.hitbox.x = self.rect.x + 15
+        self.hitbox.y = self.rect.y + 20
 
         # KEEP PLAYER ON SCREEN
         if self.rect.left < 0:
@@ -78,3 +78,19 @@ class Player(pygame.sprite.Sprite):
     # CREATE BULLET
     def create_bullet(self):
         return Bullet(self.rect.centerx, self.rect.top, PLAYER_PROJECTILE)
+
+
+class Lives(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__()
+        self.image = pygame.image.load("assets/treesicon1.png") # load the sprite image
+        self.rect = self.image.get_rect()
+        self.rect.center = [pos_x, pos_y]
+    
+    def update(self, lives):
+        if lives == 2:
+            self.image = pygame.image.load("assets/treesicon1.png")
+        elif lives == 1:
+            self.image = pygame.image.load("assets/treesicon2.png")
+        elif lives == 0:
+            self.kill()

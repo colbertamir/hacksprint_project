@@ -1,5 +1,5 @@
 import pygame, sys
-from player import Player
+from player import Player, Lives
 from boss import Boss
 from healthbar import HealthBar, BossHealthBar
 from player_projectile import Bullet
@@ -7,6 +7,7 @@ from constants import *
 
 # GENERAL SETUP
 pygame.init()
+pygame.display.set_caption('Iceicle: A Winter Adventure')
 clock = pygame.time.Clock()
 
 # CREATE SCREEN
@@ -39,6 +40,10 @@ healthbar_group.add(healthbar)
 boss_healthbar = BossHealthBar(720, 30)
 bosshealthbar_group = pygame.sprite.Group()
 bosshealthbar_group.add(boss_healthbar)
+
+lives = Lives(735, 860)
+lives_group = pygame.sprite.Group()
+lives_group.add(lives)
 
 # FUNCTION TO MAKE A SURFACE
 def make_surface(text, font_size, text_rgb, bg_rgb):
