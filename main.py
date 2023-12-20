@@ -9,6 +9,11 @@ def main():
     screen = pygame.display.set_mode((800, 900))
     game_state = GameEvent.TITLESCREEN
 
+# MUSIC
+    pygame.mixer.music.load("assets/bg_music.mp3")
+    pygame.mixer.music.play(-1)
+
+
     running = True
     while running:
         if game_state == GameEvent.TITLESCREEN:
@@ -22,5 +27,5 @@ def main():
             game_state = game_loop(screen)
         
         if game_state == GameEvent.GAMEOVER:
-            game_state = game_over(screen)
+            game_state = game_over(screen, player.lives)
 main()

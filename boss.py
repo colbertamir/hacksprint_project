@@ -21,7 +21,7 @@ class Boss(pygame.sprite.Sprite):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.rect.center = [self.pos_x, self.pos_y]
-        self.hitbox = pygame.Rect(self.pos_x + 15, self.pos_y + 45, 90, 90)
+        self.hitbox = pygame.Rect(self.pos_x, self.pos_y, 100, 100)
         self.dx = 0.5
         self.dy = 0.75
         self.health = 35
@@ -60,7 +60,7 @@ class Boss(pygame.sprite.Sprite):
         self.pos_x += self.dx
         self.pos_y += self.dy
         self.rect.center = (self.pos_x, self.pos_y)
-        self.hitbox.center = (self.pos_x + 15, self.pos_y + 45)
+        self.hitbox.center = (self.pos_x, self.pos_y)
 
     def create_ice(self):
         return Ice(self.rect.centerx, self.rect.centery, "assets/ice.png")

@@ -30,7 +30,8 @@ def title_screen(screen):
         center_pos = (205, 230),
         font_size = 30,
         bg_color = None,
-        text_color = (149, 23, 23),
+        text_color = (29, 57, 19),
+        highlight_color = (149, 23, 23),
         text_content = 'START',
         action = GameEvent.STARTGAME,
     )
@@ -70,7 +71,7 @@ def game_loop(screen):
 
     # RESET HEALTH
     player.health = 12
-    boss.health = 35
+    boss.health = 40
 
     # RESET LISTS
     bullets = []
@@ -82,13 +83,24 @@ def game_loop(screen):
 
     # PLAYER READY STATUS
     ready = False
+    get_ready = Text(
+        center_pos = (400, 400),
+        font_size = 20,
+        bg_color = None,
+        text_color = (219, 243, 254),
+        text_content = 'PRESS ANY KEY TO START',
+    )
+
+    get_set = RenderUpdates(get_ready)
 
     # RESENT FIRE COUNT FOR BOSS
     fire_count = 0
 
-
 # MAIN GAME LOOP
     while True:
+
+        if ready == False:
+            get_set.draw(screen)
 
         # LOOP THROUGH ALL EVENTS
         for event in pygame.event.get():
@@ -182,6 +194,7 @@ def game_loop(screen):
         # DRAW HP BARS
         healthbar_group.draw(screen)
         bosshealthbar_group.draw(screen)
+        lives_group.draw(screen)
         
 
         # UPDATE SPRITES
@@ -191,6 +204,7 @@ def game_loop(screen):
         ice_group.update()
         healthbar_group.update(player.health)
         bosshealthbar_group.update(boss.health)
+        lives_group.update(player.lives)
 
         # HIT BOXES
         #if player.health > 0 and ready:
@@ -199,36 +213,55 @@ def game_loop(screen):
         #    boss.draw(screen)
         #if player.health > 0 and ready:
         #    for bullet in bullets:
-        #        bullet.draw(screen)
+        #       bullet.draw(screen)
         #if boss.health > 0 and ready:
-        #    for ice in ices:
-         #       ice.draw(screen)
+        #   for ice in ices:
+        #     ice.draw(screen)
         
 
         clock.tick(120)
 
 
-def game_over(screen):
+def game_over(screen, lives):
         
-    game_over = Button(
+    game_over = Text(
         center_pos = (400, 400),
-        font_size = 50,
-        bg_color = BLACK,
-        text_color = RED,
+        font_size = 65,
+        bg_color = None,
+        text_color = (219, 243, 254),
         text_content = 'GAME OVER',
-        action = GameEvent.STATIC,
     )
 
     return_button = Button(
-        center_pos = (400, 500),
-        font_size = 30,
-        bg_color = BLACK,
-        text_color = RED,
+        center_pos = (400, 700),
+        font_size = 35,
+        bg_color = None,
+        text_color = (23, 37, 64),
+        highlight_color = (255, 202, 40),
         text_content = 'start over?',
         action = GameEvent.STARTOVER,
     )
 
+    if lives > 0:
+        message = Text(
+        center_pos = (400, 550),
+        font_size = 50,
+        bg_color = None,
+        text_color = (219, 243, 254),
+        text_content = 'YOU WON :)',
+        )
+    else:
+        message = Text(
+        center_pos = (400, 550),
+        font_size = 50,
+        bg_color = None,
+        text_color = (219, 243, 254),
+        text_content = 'YOU DIED ):',
+        )
+
+
     buttons = RenderUpdates(return_button, game_over)
+    text = RenderUpdates(message)
 
     pygame.mouse.set_visible(True)
 
@@ -236,9 +269,14 @@ def game_over(screen):
     while running:
         mouse_up = False
         for event in pygame.event.get():
+
+            # CHECK IF USER EXITED
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
-        screen.fill(BLACK)
 
         for button in buttons:
             ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
@@ -246,5 +284,6 @@ def game_over(screen):
                 return ui_action
             
             button.draw(screen)
+        text.draw(screen)
         pygame.display.flip()
-        screen.blit("assets/frost.png", (0, 0)) # add background to screen
+        screen.blit(pygame.image.load("assets/endscreen2.jpg"), (0, 0)) # add background to screen

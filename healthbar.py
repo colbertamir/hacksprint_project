@@ -34,18 +34,18 @@ class BossHealthBar(pygame.sprite.Sprite):
         self.rect.center = [pos_x, pos_y]
         self.gunshot = pygame.mixer.Sound("assets/shoot.wav")
         self.hitbox = pygame.Rect(pos_x + 15, pos_y + 45, 75, 90)
-        self.health = 35
+        self.health = 40
 
     def update(self, health):
-        if health <= 35 and health >= 29:
+        if health <= 40 and health >= 33:
             self.image = pygame.image.load(BOSS_HP_BAR[0])
-        if health <= 28 and health >= 22:
+        if health <= 32 and health >= 27:
             self.image = pygame.image.load(BOSS_HP_BAR[1])
-        elif health <= 21 and health >= 15:
+        elif health <= 26 and health >= 19:
             self.image = pygame.image.load(BOSS_HP_BAR[2])
-        elif health <= 14 and health >= 8:
+        elif health <= 18 and health >= 10:
             self.image = pygame.image.load(BOSS_HP_BAR[3])
-        elif health <= 7 and health >= 1:
+        elif health <= 9 and health >= 1:
             self.image = pygame.image.load(BOSS_HP_BAR[4])
         elif health == 0:
             self.image = pygame.image.load(BOSS_HP_BAR[5])
