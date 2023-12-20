@@ -25,6 +25,10 @@ pip install pygame
 ```python
 python main.py
 ```
+or
+```python
+python3 main.py
+```
 - Use `A` & `D` or arrow keys &larr;&rarr; to move!
 
 - Use `SPACE` to shoot!
