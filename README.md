@@ -25,8 +25,24 @@ pip install pygame
 ```python
 python main.py
 ```
+- Use `A` & `D` or arrow keys &larr;&rarr; to move!
 
+- Use `SPACE` to shoot!
 
+![Gameplay Screenshot](gameplay_screenshot.png)
+
+#### Contribution Guidelines
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature-branch`.
+3. Make changes and commit: `git commit -m 'Add new feature'`.
+4. Push to the branch: `git push origin feature-branch`.
+5. Create a pull request.
+
+#### LinkedIn
+
+[Amir Colbert](https://www.linkedin.com/in/amir-colbert-a0659a24b/)
+
+[Kasper Bouldin](https://www.linkedin.com/in/kasp-bird-ab844b292)
 
 
 
