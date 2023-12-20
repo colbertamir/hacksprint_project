@@ -50,6 +50,10 @@ def title_screen(screen):
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    mouse_up = True        
 
         for button in buttons:
             ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
@@ -123,7 +127,7 @@ def game_loop(screen):
                 ready = True
             
             # FIRING PATTERN FOR BOSS
-            fc_num = random.randrange(7, 11)
+            fc_num = random.randrange(5, 10)
 
             if fire_count <= fc_num:
                 if ready and event.type == FIRE_EVENT and boss.health > 0 and player.health > 0:
@@ -161,6 +165,7 @@ def game_loop(screen):
             # RESET HEALTH IF PLAYER HAS EXTRA LIFE
             if player.health == 0 and player.lives > 0:
                 player.health = 12
+                boss.health += 9
                 player.lives -= 1
 
             # PLAYER ANIMATION
